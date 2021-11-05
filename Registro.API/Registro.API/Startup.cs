@@ -2,11 +2,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Registro.API.DataModels;
+using Registro.API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +31,15 @@ namespace Registro.API
         {
 
             services.AddControllers();
+            services.AddDbContext<StudentAdminContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("StudentAdminPortalDb"))
+            );
+            services.AddScoped<IStudentRepository, SqlStudentRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Registro.API", Version = "v1" });
             });
+            services.AddAutoMapper(typeof(Startup).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

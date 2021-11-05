@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Registro.API.DataModels
+namespace Registro.API.DomainModels
 {
     public class Student
     {
@@ -15,10 +15,7 @@ namespace Registro.API.DataModels
         public long Mobile { get; set; }
         public string ProfileImageUrl { get; set; }
         public Guid GenderId { get; set; }
-
-        //Navigation Propertise
         public Gender Gender { get; set; }
         public Address Address { get; set; }
-
     }
 }

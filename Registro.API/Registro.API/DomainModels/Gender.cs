@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Registro.API.DataModels
+namespace Registro.API.DomainModels
 {
     public class Gender
     {
