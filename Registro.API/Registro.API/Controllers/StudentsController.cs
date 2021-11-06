@@ -28,7 +28,7 @@ namespace Registro.API.Controllers
         {
             var students = await studentRepository.GetStudentsAsync();
             return Ok(mapper.Map<List<Student>>(students));
-            
+
 
             //var domainModelStudents = new List<Student>();
 
@@ -59,6 +59,21 @@ namespace Registro.API.Controllers
             //}
             //return Ok(domainModelStudents);
 
+        }
+
+        [HttpGet]
+        [Route("[controller]/{studentId:guid}")]
+        public async Task<IActionResult> GetStudentAsync([FromRoute] Guid studentId)
+        {
+            //fetch student detail
+            var student = await studentRepository.GetStudentAsync(studentId);
+
+            //return the result
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<Student>(student));
         }
     }
 }
