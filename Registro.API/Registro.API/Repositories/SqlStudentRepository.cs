@@ -73,5 +73,11 @@ namespace Registro.API.Repositories
             return null;
         }
 
+        public async Task<Student> AddStudent(Student request)
+        {
+            var student = await context.Student.AddAsync(request);
+            await context.SaveChangesAsync();
+            return student.Entity;
+        }
     }
 }
