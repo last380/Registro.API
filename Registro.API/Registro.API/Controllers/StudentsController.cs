@@ -20,7 +20,7 @@ namespace Registro.API.Controllers
         private readonly IImageRepository imageRepository;
 
         public StudentsController(
-            IStudentRepository studentRepository, 
+            IStudentRepository studentRepository,
             IMapper mapper,
             IImageRepository imageRepository
         )
@@ -125,20 +125,37 @@ namespace Registro.API.Controllers
         [Route("[controller]/{studentId:guid}/upload-image")]
         public async Task<IActionResult> UploadImage([FromRoute] Guid studentId, IFormFile profileImage)
         {
-            //check if student exists
-            if (await studentRepository.Exists(studentId)) {
+            var validExtensions = new List<string>()
+            {
+                ".jpeg",
+                ".png",
+                ".gif",
+                ".jpg"
+            };
 
-                var fileName = Guid.NewGuid() + Path.GetExtension(profileImage.FileName);
-
-                //upload the image to local storage
-                var fileImagePath = await imageRepository.Upload(profileImage, fileName);
-
-                //update the profile image path in the database
-                if (await studentRepository.UpdateProfileImage(studentId, fileImagePath)) 
+            if (profileImage != null && profileImage.Length > 0)
+            {
+                var extension = Path.GetExtension(profileImage.FileName);
+                if (validExtensions.Contains(extension))
                 {
-                    return Ok(fileImagePath);
+                    //check if student exists
+                    if (await studentRepository.Exists(studentId))
+                    {
+
+                        var fileName = Guid.NewGuid() + Path.GetExtension(profileImage.FileName);
+
+                        //upload the image to local storage
+                        var fileImagePath = await imageRepository.Upload(profileImage, fileName);
+
+                        //update the profile image path in the database
+                        if (await studentRepository.UpdateProfileImage(studentId, fileImagePath))
+                        {
+                            return Ok(fileImagePath);
+                        }
+                        return StatusCode(StatusCodes.Status500InternalServerError, "Error Uploading Image");
+                    }
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error Uploading Image");
+                return BadRequest("This is not a valid image format");
             }
             return NotFound();
         }
