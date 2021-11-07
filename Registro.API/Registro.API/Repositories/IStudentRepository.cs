@@ -14,5 +14,7 @@ namespace Registro.API.Repositories
         Task<Student> UpdateStudent(Guid studentId, Student request);
         Task<Student> DeleteStudent(Guid studentId);
         Task<Student> AddStudent(Student request);
+
+        Task<bool> UpdateProfileImage(Guid studentId, string profileImageUrl);
     }
 }
